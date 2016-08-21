@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Paint Blob</title>
+        <style type = "text/css">
+            h1 {
+                text-decoration: underline;
+            }
+            .line {
+                border-bottom: 2px dashed black;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Paint Blob Program</h1>
+        <p>The Paint Blob Program randomly places paint blobs in a 10x10 grid
+            and displays the number of paint blobs used to fill the grid and
+            the most number of paint blobs used in a single cell.</p>
+        <p class = "line"></p>
+        <p id = "NumPaintBlobs">Number of Paint Blobs Used: 0</p>
+        <p id = "MaxDepth">Most Paint in a Single Cell: 0</p>
+        <script>
+            var depthArr = [];
+            for(var i = 0; i < 100; i++) {
+                depthArr[i] = 0;
+            }
+            
+            function createGrid() {
+                // get the reference for the body
+                var body = document.getElementsByTagName("body")[0];
+                // creates a <table> element and a <tbody> element
+                var tbl = document.createElement("table");
+                var tblBody = document.createElement("tbody");
+                tbl.cellSpacing = "0px";
+                // creating all cells
+                for(var i = 0; i < 10; i++) {
+                    // creates a table row
+                    var row = document.createElement("tr");
+                    for(var j = 0; j < 10; j++) {
+                        var cell = document.createElement("td");
+                        cell.style.width = "40px";
+                        cell.style.height = "40px";
+                        cell.style.backgroundColor = "white";
+                        row.appendChild(cell);
+                    }
+                    // add the row to the end of the table body
+                    tblBody.appendChild(row);
+                }
+                // put the <tbody> in the <table>
+                tbl.appendChild(tblBody);
+                // appends <table> into <body>
+                body.appendChild(tbl);
+            }
+            
+            createGrid();
+                   
+            function isFilled() {
+                var body = document.getElementsByTagName("body")[0];
+                var tbl = body.getElementsByTagName("table")[0];
+                var tblBody = tbl.getElementsByTagName("tbody")[0];
+                for(var i = 0; i < 10; i++) {
+                    var row = tblBody.getElementsByTagName("tr")[i];
+                    for(var j = 0; j < 10; j++) {
+                        var cell = row.getElementsByTagName("td")[j];
+                        if(cell.style.backgroundColor === "white")
+                            return false;
+                    }
+                }
+                return true;
+            }
+            
+            var numOPntBlbs = 0;
+            
+            function paintBlob(numOPntBlbs, depthArr) {
+                numOPntBlbs++;
+                var element = document.getElementById('NumPaintBlobs');
+                element.textContent = "Number of Paint Blobs Used: " + numOPntBlbs;
+                var body = document.getElementsByTagName("body")[0];
+                var tbl = body.getElementsByTagName("table")[0];
+                var tblBody = tbl.getElementsByTagName("tbody")[0];
+                var x = Math.floor(Math.random() * 10);
+                var y = Math.floor(Math.random() * 10);
+                var row = tblBody.getElementsByTagName("tr")[x];
+                var cell = row.getElementsByTagName("td")[y];
+                if(cell.style.backgroundColor === "blue")
+                    cell.style.backgroundColor = "red";
+                else if(cell.style.backgroundColor === "red")
+                    cell.style.backgroundColor = "blue";
+                else
+                    cell.style.backgroundColor = "red";
+                depthArr[y+x*10]++;
+                var max = depthArr[0];
+                for(var i = 1; i < 100; i++) {
+                    if(max < depthArr[i])
+                        max = depthArr[i];
+                }
+                var element = document.getElementById('MaxDepth');
+                element.textContent = "Most Paint in a Single Cell: " + max;
+                if(!isFilled())
+                    setTimeout(function(){paintBlob(numOPntBlbs, depthArr);}, 200);
+                else
+                    return;
+            }
+            setTimeout(function(){paintBlob(numOPntBlbs, depthArr);}, 200);
+            
+            var body = document.getElementsByTagName("body")[0];
+            var end = document.createElement("p");
+            var endText = document.createTextNode("Author: Damon Godwin");
+            end.style.textDecoration = "overline";
+            end.appendChild(endText);
+            body.appendChild(end);
+            end = document.createElement("p");
+            endText = document.createTextNode("Created: 1/29/2016");
+            end.appendChild(endText);
+            body.appendChild(end);
+        </script>
+    </body>
+</html>
